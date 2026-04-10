@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 /**
  * ARSHERP - Final Unified Solution
- * Fixed: Missing footer tags, closing brackets, and TypeScript parameter types.
+ * Fixed: Navbar items uppercase and visible on mobile.
  */
 export default function ArshERPApp() {
   const [currentPage, setCurrentPage] = useState('home'); 
@@ -27,7 +27,6 @@ export default function ArshERPApp() {
 
   if (!isMounted) return null;
 
-  // Added 'any' type to 'e' to avoid TypeScript errors during build
   const handleLogin = (e: any) => {
     e.preventDefault();
     const user = users.find(u => u.id === formData.id && u.pass === formData.pass);
@@ -48,15 +47,26 @@ export default function ArshERPApp() {
   };
 
   const Header = () => (
-    <nav className="flex items-center justify-between px-12 py-6 bg-white border-b border-gray-100">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-[#e67e22] text-white flex items-center justify-center font-black text-2xl rounded-sm">A</div>
-        <div className="text-left">
-          <h1 className="text-xl font-black text-[#1a2b48] leading-none uppercase">ARSHERP</h1>
-          <p className="text-[9px] font-bold text-gray-400 mt-1 uppercase">A Product of Arsh Corporation</p>
+    <nav className="flex flex-col md:flex-row items-center justify-between px-5 md:px-12 py-4 md:py-6 bg-white border-b border-gray-100 sticky top-0 z-50">
+      <div className="flex items-center justify-between w-full md:w-auto mb-4 md:mb-0">
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-[#e67e22] text-white flex items-center justify-center font-black text-lg md:text-2xl rounded-sm">A</div>
+          <div className="text-left">
+            <h1 className="text-sm md:text-xl font-black text-[#1a2b48] leading-none uppercase">ARSHERP</h1>
+            <p className="text-[7px] md:text-[9px] font-bold text-gray-400 mt-1 uppercase tracking-tighter">A Product of Arsh Corporation</p>
+          </div>
         </div>
+        {/* Mobile Dashboard Button */}
+        <button 
+          onClick={() => isLoggedIn ? setCurrentPage('dashboard') : setCurrentPage('login')} 
+          className="md:hidden bg-[#0f172a] text-white px-4 py-2 rounded-full font-bold text-[9px] uppercase shadow-md"
+        >
+          Dashboard
+        </button>
       </div>
-      <div className="hidden md:flex items-center gap-10 text-[11px] font-bold text-gray-700 uppercase tracking-widest">
+      
+      {/* Navbar Items - Fixed Uppercase and Visibility */}
+      <div className="flex flex-wrap items-center justify-center gap-4 md:gap-10 text-[9px] md:text-[11px] font-bold text-gray-700 uppercase tracking-widest">
         {['home', 'features', 'pricing', 'about', 'contact'].map(item => (
           <button 
             key={item} 
@@ -66,9 +76,10 @@ export default function ArshERPApp() {
             {item.toUpperCase()}
           </button>
         ))}
+        {/* Desktop Dashboard Button */}
         <button 
           onClick={() => isLoggedIn ? setCurrentPage('dashboard') : setCurrentPage('login')} 
-          className="bg-[#0f172a] text-white px-8 py-2.5 rounded-full font-bold shadow-lg uppercase"
+          className="hidden md:block bg-[#0f172a] text-white px-8 py-2.5 rounded-full font-bold shadow-lg uppercase"
         >
           Dashboard
         </button>
@@ -76,19 +87,49 @@ export default function ArshERPApp() {
     </nav>
   );
 
+  const renderMainContent = () => {
+    if (currentPage === 'home') {
+      return (
+        <div className="flex flex-col items-center justify-center text-center px-4 py-10 md:py-20 w-full">
+          <h1 className="text-[26px] sm:text-4xl md:text-6xl lg:text-7xl font-black text-[#1a2b48] w-full max-w-4xl leading-[1.2] md:leading-[1.1] uppercase tracking-tighter">
+            Simplify Construction <br className="hidden sm:block" /> with <span className="text-[#e67e22]">Smart Software</span>
+          </h1>
+          <p className="mt-4 md:mt-8 text-gray-400 text-[12px] md:text-lg font-medium max-w-[260px] md:max-w-2xl leading-relaxed">
+            Plan, track, and manage your projects efficiently in one platform.
+          </p>
+          <div className="mt-8 md:mt-12 flex flex-col sm:flex-row gap-3 w-full max-w-[240px] sm:max-w-none justify-center">
+            <button onClick={() => setCurrentPage('login')} className="bg-[#e67e22] text-white px-8 py-4 rounded-xl font-black text-[10px] md:text-xs uppercase shadow-xl active:scale-95 transition-all">
+              Get Started
+            </button>
+            <button className="bg-white text-[#1a2b48] border-2 border-gray-100 px-8 py-4 rounded-xl font-black text-[10px] md:text-xs uppercase active:scale-95 transition-all">
+              Watch Demo Video
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className="flex flex-col items-center justify-center text-center p-10 min-h-[300px]">
+        <h2 className="text-lg md:text-2xl font-black text-gray-300 uppercase tracking-[0.2em] animate-pulse">
+          {currentPage.toUpperCase()} Section Coming Soon
+        </h2>
+      </div>
+    );
+  };
+
   if (!isLoggedIn && (currentPage === 'login' || currentPage === 'signup')) {
     return (
-      <div className="h-screen bg-[#020617] flex items-center justify-center p-4 overflow-hidden">
-        <div className="bg-white p-12 rounded-[2.5rem] w-full max-w-sm shadow-2xl">
-          <h2 className="text-center font-black text-[#1a2b48] text-xl mb-8 uppercase">{currentPage}</h2>
+      <div className="min-h-screen bg-[#020617] flex items-center justify-center p-4">
+        <div className="bg-white p-8 md:p-12 rounded-[2rem] w-full max-w-sm shadow-2xl">
+          <h2 className="text-center font-black text-[#1a2b48] text-xl mb-8 uppercase tracking-widest">{currentPage}</h2>
           <form onSubmit={currentPage === 'login' ? handleLogin : handleSignUp} className="space-y-4">
-            <input type="text" placeholder="ID / EMAIL" className="w-full p-4 bg-gray-50 border rounded-2xl outline-none" onChange={e => setFormData({...formData, id: e.target.value})}/>
-            <input type="password" placeholder="PASSWORD" className="w-full p-4 bg-gray-50 border rounded-2xl outline-none" onChange={e => setFormData({...formData, pass: e.target.value})}/>
+            <input type="text" placeholder="ID / EMAIL" className="w-full p-4 bg-gray-50 border rounded-xl outline-none" onChange={e => setFormData({...formData, id: e.target.value})}/>
+            <input type="password" placeholder="PASSWORD" className="w-full p-4 bg-gray-50 border rounded-xl outline-none" onChange={e => setFormData({...formData, pass: e.target.value})}/>
             {currentPage === 'signup' && (
-              <input type="password" placeholder="CONFIRM PASSWORD" className="w-full p-4 bg-gray-50 border rounded-2xl outline-none" onChange={e => setFormData({...formData, confirmPass: e.target.value})}/>
+              <input type="password" placeholder="CONFIRM PASSWORD" className="w-full p-4 bg-gray-50 border rounded-xl outline-none" onChange={e => setFormData({...formData, confirmPass: e.target.value})}/>
             )}
             {status && <p className="text-[10px] text-red-500 font-bold text-center uppercase">{status}</p>}
-            <button className="w-full bg-[#e67e22] text-white py-5 rounded-2xl font-black uppercase text-xs">Continue</button>
+            <button className="w-full bg-[#e67e22] text-white py-4 rounded-xl font-black uppercase text-xs">Continue</button>
           </form>
           <button onClick={() => setCurrentPage(currentPage==='login'?'signup':'login')} className="w-full mt-4 text-[#1a2b48] font-bold text-[10px] uppercase underline text-center">Switch Mode</button>
         </div>
@@ -98,77 +139,43 @@ export default function ArshERPApp() {
 
   if (isLoggedIn && currentPage === 'dashboard') {
     return (
-      <div className="h-screen overflow-hidden bg-white flex flex-col">
-        <Header />
-        <div className="flex flex-1 p-10 gap-10">
-          <aside className="w-72 bg-[#1a233a] rounded-[2.5rem] p-10 flex flex-col shadow-2xl text-white">
-            <span className="text-[#e67e22] text-[10px] font-black uppercase tracking-[0.3em] mb-12">ADMIN PANEL</span>
-            <nav className="flex flex-col gap-8">
-              {['Projects', 'Materials', 'Workers', 'Safety', 'Reports', 'Settings'].map((item) => (
-                <button key={item} onClick={() => setActiveTab(item)} className={`flex items-center gap-3 text-xs font-bold transition-all ${activeTab === item ? 'text-white' : 'text-slate-400 hover:text-white'}`}>
-                  <div className={`w-1.5 h-1.5 rounded-full ${activeTab === item ? 'bg-[#e67e22]' : 'bg-slate-600'}`}></div>
-                  {item.toUpperCase()}
-                </button>
-              ))}
-            </nav>
-            <button onClick={() => setIsLoggedIn(false)} className="mt-auto text-xs font-black text-red-400 uppercase text-left">Logout</button>
-          </aside>
-          <main className="flex-1 pt-4">
-            <h2 className="text-3xl font-black text-[#1a2b48] uppercase tracking-tight mb-16">{activeTab} Overview</h2>
-            <div className="grid grid-cols-3 gap-8">
-              <div className="p-10 border border-gray-100 rounded-[2rem] shadow-sm"><p className="text-[10px] font-black text-slate-400 uppercase mb-2">Active Sites</p><h3 className="text-6xl font-black text-[#1a2b48]">12</h3></div>
-              <div className="p-10 border-2 border-[#1a2b48] rounded-[2rem] shadow-lg"><p className="text-[10px] font-black text-slate-400 uppercase mb-2">Tasks Pending</p><h3 className="text-6xl font-black text-[#1a2b48]">45</h3></div>
-              <div className="p-10 border border-gray-100 rounded-[2rem] shadow-sm"><p className="text-[10px] font-black text-slate-400 uppercase mb-2">Alerts</p><h3 className="text-6xl font-black text-red-600">03</h3></div>
-            </div>
-          </main>
-        </div>
+      <div className="min-h-screen bg-white flex flex-col md:flex-row overflow-x-hidden">
+        <aside className="w-full md:w-64 bg-[#1a233a] p-6 md:p-8 flex flex-col text-white">
+          <span className="text-[#e67e22] text-[9px] font-black uppercase tracking-[0.3em] mb-8">ADMIN PANEL</span>
+          <nav className="grid grid-cols-2 md:flex md:flex-col gap-4 md:gap-6">
+            {['Projects', 'Materials', 'Workers', 'Reports'].map((item) => (
+              <button key={item} onClick={() => setActiveTab(item)} className={`flex items-center gap-2 text-[10px] font-bold ${activeTab === item ? 'text-white' : 'text-slate-400'}`}>
+                <div className={`w-1.5 h-1.5 rounded-full ${activeTab === item ? 'bg-[#e67e22]' : 'bg-slate-600'}`}></div>
+                {item.toUpperCase()}
+              </button>
+            ))}
+          </nav>
+          <button onClick={() => setIsLoggedIn(false)} className="mt-8 md:mt-auto text-[10px] font-black text-red-400 uppercase">Logout</button>
+        </aside>
+        <main className="flex-1 p-5 md:p-10 bg-gray-50">
+          <Header />
+          <h2 className="text-xl md:text-3xl font-black text-[#1a2b48] uppercase my-8">{activeTab.toUpperCase()} Overview</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-8">
+            {[{l:'Sites', v:'12'}, {l:'Tasks', v:'45'}, {l:'Alerts', v:'03', c:'text-red-600'}].map((s, i) => (
+              <div key={i} className="p-6 md:p-10 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                <p className="text-[9px] font-black text-slate-400 uppercase mb-2">{s.l.toUpperCase()}</p>
+                <h3 className={`text-4xl md:text-6xl font-black ${s.c || 'text-[#1a2b48]'}`}>{s.v}</h3>
+              </div>
+            ))}
+          </div>
+        </main>
       </div>
     );
   }
 
-  const renderMainContent = () => {
-    if (currentPage === 'home') {
-      return (
-        <div className="flex flex-col items-center justify-center text-center">
-          <h1 className="text-4xl md:text-6xl font-black text-[#1a2b48] max-w-5xl leading-[1.1] uppercase tracking-tighter">
-            Simplify Construction <br /> with <span className="text-[#e67e22]">Smart Software</span>
-          </h1>
-          <p className="mt-8 text-gray-400 text-lg md:text-xl font-medium max-w-2xl">
-            Plan, track, and manage your projects efficiently in one platform.
-          </p>
-          <div className="mt-12 flex flex-col sm:flex-row gap-6">
-            <button onClick={() => setCurrentPage('login')} className="bg-[#e67e22] text-white px-12 py-5 rounded-xl font-black text-xs uppercase shadow-2xl">
-              Get Started
-            </button>
-            <button className="bg-white text-[#1a2b48] border-2 border-gray-100 px-12 py-5 rounded-xl font-black text-xs uppercase hover:bg-gray-50 transition-all">
-              Watch Demo Video
-            </button>
-          </div>
-        </div>
-      );
-    }
-    return (
-      <div className="flex flex-col items-center justify-center text-center">
-        <h2 className="text-2xl font-black text-gray-300 uppercase tracking-[0.5em] animate-pulse">
-          {currentPage} Section Coming Soon
-        </h2>
-      </div>
-    );
-  };
-
   return (
-    <div className="h-screen overflow-hidden bg-white flex flex-col font-sans">
+    <div className="min-h-screen bg-white flex flex-col overflow-x-hidden">
       <Header />
-      <main className="flex-1 flex flex-col items-center justify-center px-6">
+      <main className="flex-1 flex flex-col items-center justify-center">
         {renderMainContent()}
       </main>
-      <footer className="w-full bg-[#1a233a] py-8 flex flex-col items-center border-t-8 border-[#e67e22]">
-        <div className="flex items-center gap-4 text-[10px] font-black tracking-[0.3em] text-white uppercase">
-          <span>ARSHERP</span>
-          <span className="text-gray-600">|</span>
-          <span>A PRODUCT OF ARSH CORPORATION</span>
-        </div>
-        <p className="text-[8px] text-gray-500 mt-2 uppercase font-bold tracking-widest">© 2026 All Rights Reserved</p>
+      <footer className="w-full bg-[#1a233a] py-6 px-10 border-t border-[#e67e22] text-center">
+         <p className="text-[8px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest">© 2026 ARSHERP. ALL RIGHTS RESERVED.</p>
       </footer>
     </div>
   );
