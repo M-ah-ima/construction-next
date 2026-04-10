@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 /**
  * ARSHERP - Final Unified Solution
- * Fixed: Missing footer tags and closing brackets.
+ * Fixed: Missing footer tags, closing brackets, and TypeScript parameter types.
  */
 export default function ArshERPApp() {
   const [currentPage, setCurrentPage] = useState('home'); 
@@ -27,7 +27,8 @@ export default function ArshERPApp() {
 
   if (!isMounted) return null;
 
-  const handleLogin = (e) => {
+  // Added 'any' type to 'e' to avoid TypeScript errors during build
+  const handleLogin = (e: any) => {
     e.preventDefault();
     const user = users.find(u => u.id === formData.id && u.pass === formData.pass);
     if (user) {
@@ -39,7 +40,7 @@ export default function ArshERPApp() {
     }
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = (e: any) => {
     e.preventDefault();
     if (formData.pass !== formData.confirmPass) return setStatus('PASSWORDS DO NOT MATCH');
     setUsers([...users, { id: formData.id, pass: formData.pass }]);
@@ -83,6 +84,10 @@ export default function ArshERPApp() {
           <form onSubmit={currentPage === 'login' ? handleLogin : handleSignUp} className="space-y-4">
             <input type="text" placeholder="ID / EMAIL" className="w-full p-4 bg-gray-50 border rounded-2xl outline-none" onChange={e => setFormData({...formData, id: e.target.value})}/>
             <input type="password" placeholder="PASSWORD" className="w-full p-4 bg-gray-50 border rounded-2xl outline-none" onChange={e => setFormData({...formData, pass: e.target.value})}/>
+            {currentPage === 'signup' && (
+              <input type="password" placeholder="CONFIRM PASSWORD" className="w-full p-4 bg-gray-50 border rounded-2xl outline-none" onChange={e => setFormData({...formData, confirmPass: e.target.value})}/>
+            )}
+            {status && <p className="text-[10px] text-red-500 font-bold text-center uppercase">{status}</p>}
             <button className="w-full bg-[#e67e22] text-white py-5 rounded-2xl font-black uppercase text-xs">Continue</button>
           </form>
           <button onClick={() => setCurrentPage(currentPage==='login'?'signup':'login')} className="w-full mt-4 text-[#1a2b48] font-bold text-[10px] uppercase underline text-center">Switch Mode</button>
@@ -159,7 +164,9 @@ export default function ArshERPApp() {
       </main>
       <footer className="w-full bg-[#1a233a] py-8 flex flex-col items-center border-t-8 border-[#e67e22]">
         <div className="flex items-center gap-4 text-[10px] font-black tracking-[0.3em] text-white uppercase">
-          <span>ARSHERP</span><span className="text-gray-600">|</span><span>A PRODUCT OF ARSH CORPORATION</span>
+          <span>ARSHERP</span>
+          <span className="text-gray-600">|</span>
+          <span>A PRODUCT OF ARSH CORPORATION</span>
         </div>
         <p className="text-[8px] text-gray-500 mt-2 uppercase font-bold tracking-widest">© 2026 All Rights Reserved</p>
       </footer>
